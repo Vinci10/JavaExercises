@@ -1,0 +1,64 @@
+import org.apache.tools.ant.filters.*
+
+group 'gradle'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Fat-Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+}
+
+
+task myTask(type: Jar) {
+    String profile = 'no'
+    if (project.hasProperty('profile')) {
+        if (project.getProperty('profile') == 'dev') {
+            profile = 'dev'
+            processResources {
+                filter ReplaceTokens, tokens: [
+                        'db.driverClass': 'com.mysql.jdbc.Driver',
+                        'db.connectionURL': 'jdbc:mysql://localhost:3306/test',
+                        'db.username': 'dev',
+                        'db.password': 'dev1'
+                ]
+            }
+        } else if (project.getProperty('profile') == 'prod') {
+            profile = 'prod'
+            processResources {
+                filter ReplaceTokens, tokens: [
+                        'db.driverClass': 'com.microsoft.sqlserver.jdbc.SQLServerDrive',
+                        'db.connectionURL': 'jdbc:sqlserver://localhost:8080;databaseName=test',
+                        'db.username': 'prod',
+                        'db.password': 'prod1'
+                ]
+            }
+        }
+    }
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Resource Filtering Example',
+                'Implementation-Version': version,
+                'Main-Class': 'Main'
+    }
+    baseName = project.name + '-all_profile=' + profile
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
