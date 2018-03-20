@@ -1,13 +1,12 @@
 import org.apache.commons.cli.*;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.nio.file.InvalidPathException;
 import java.security.CodeSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CmdParser {
     private String[] args;
@@ -19,8 +18,8 @@ public class CmdParser {
         addOptions();
     }
 
-    public HashMap<String, String> parse() throws IllegalArgumentException {
-        HashMap<String, String> parameters = new HashMap<>();
+    public Map<String, String> parse() throws IllegalArgumentException {
+        Map<String, String> parameters = new HashMap<>();
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine;
         try {
@@ -36,8 +35,6 @@ public class CmdParser {
             parameters.put("jarDir", dir);
         } catch (ParseException e) {
             throw new IllegalArgumentException("Invalid parameters");
-        } catch (URISyntaxException | InvalidPathException e) {
-            throw new IllegalArgumentException("Invalid outDir parameter");
         }
         return parameters;
     }
@@ -58,13 +55,12 @@ public class CmdParser {
         LocalDate date = LocalDate.now();
         LocalDateTime start = LocalDateTime.of(date, LocalTime.of(0, 0, 0, 0));
         LocalDateTime end = LocalDateTime.of(date, LocalTime.of(23, 59, 59, 999));
-        System.out.println(start.toString() + ":" + end.toString());
         return start.toString() + ":00.000:" + end.toString();
     }
 
-    private String getCurrentDirectory() throws URISyntaxException {
+    private String getCurrentDirectory() {
         CodeSource codeSource = CmdParser.class.getProtectionDomain().getCodeSource();
-        File jarFile = new File(codeSource.getLocation().toURI().getPath());
+        File jarFile = new File(codeSource.getLocation().getPath());
         return jarFile.getParentFile().getPath();
     }
 }

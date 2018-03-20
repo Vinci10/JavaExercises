@@ -6,15 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-    public static List<Product> read(File file) throws IOException{
+    public List<Product> read(File file) throws IOException{
+        List<Product> products;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            products = getProducts(br);
+        }
+        return products;
+    }
+    public List<Product> getProducts(BufferedReader br) throws IOException {
         List<Product> products = new ArrayList<>();
         String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            while ((line = br.readLine()) != null) {
-                String[] product = line.split(",");
-                if(!product[0].equals("name") && !product[1].equals("price")) {
-                    products.add(new Product(product[0].replace("\"", ""), Double.parseDouble(product[1])));
-                }
+        while ((line = br.readLine()) != null) {
+            String[] product = line.split(",");
+            if(!product[0].equals("name") && !product[1].equals("price")) {
+                products.add(new Product(product[0].replace("\"", ""), Double.parseDouble(product[1])));
             }
         }
         return products;
