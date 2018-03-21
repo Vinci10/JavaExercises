@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <timestamp key="bySecond" datePattern="yyyy-MM-dd HH-mm-ss" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                {%n  "timestamp": "%d",%n  "thread": "%thread",%n  "level": "%level",%n  "message": "%msg"%n}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_TIME" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>archived_log%i.${bySecond}.log</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>10MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <pattern>
+                {%n  "timestamp": "%d",%n  "thread": "%thread",%n  "level": "%level",%n  "message": "%msg"%n}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <logger name="Console" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="File" level="INFO" additivity="false">
+        <appender-ref ref="FILE_TIME"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
