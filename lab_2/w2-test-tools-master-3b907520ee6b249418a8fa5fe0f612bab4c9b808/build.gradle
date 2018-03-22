@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'uj.jwzp.w2'
-version ''
+version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
