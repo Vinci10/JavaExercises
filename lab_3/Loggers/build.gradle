@@ -1,0 +1,42 @@
+plugins {
+    id "java"
+    id "maven-publish"
+}
+
+group 'GradleProject'
+version ''
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile group: 'com.internal', name: 'Tools', version: '1.0-SNAPSHOT'
+    compile group: 'com.external', name: 'Payments', version: '1.0-SNAPSHOT'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Fat-Jar File',
+                'Main-Class': 'Main'
+    }
+    baseName = 'loggers'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
