@@ -10,9 +10,10 @@ public class Main {
         try {
             logger.info("Start application");
             parameters = new CmdParser(args).parse();
-            TransactionLogger log = new TransactionLogger();
-            logger.info("Generate transaction and log to file");
-            log.generateTransactionAndLog(parameters, new CSVReader());
+            TransactionWriter writer = new TransactionWriter();
+            logger.info("Generating transactions...");
+            writer.generateTransactionsInJsonFormat(parameters, new CSVReader());
+            writer.writeAll();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

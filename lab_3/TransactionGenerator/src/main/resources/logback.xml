@@ -20,9 +20,7 @@
         </triggeringPolicy>
 
         <encoder>
-            <pattern>
-                {%n  "timestamp": "%d",%n  "thread": "%thread",%n  "level": "%level",%n  "message": "%msg"%n}
-            </pattern>
+            <pattern>%d{yyyy:MM:dd-HH:mm:ss.SSS} [%thread] %-5level %msg%n</pattern>
         </encoder>
     </appender>
 

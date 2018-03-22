@@ -5,17 +5,18 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransactionLogger {
+public class TransactionWriter {
+    private List<String> transactions = new ArrayList<>();
     private File outDir;
     private File itemsFile;
     private final static Logger fileLogger = LoggerFactory.getLogger("File");
     private final static Logger consoleLogger = LoggerFactory.getLogger("Console");
 
-
-    public void generateTransactionAndLog(Map<String, String> parameters, CSVReader csvReader) throws Exception {
+    public void generateTransactionsInJsonFormat(Map<String, String> parameters, CSVReader csvReader) throws Exception {
         calculatePaths(parameters);
         int eventsCount = Integer.parseInt(parameters.get("eventsCount"));
         JsonBuilder jsonBuilder;
@@ -33,8 +34,8 @@ public class TransactionLogger {
                     String str = String.format("%1.2f", sum).replace(',', '.');
                     sum = Double.valueOf(str);
                     jsonBuilder.addNumber("sum", sum);
-                    fileLogger.info(jsonBuilder.getResult());
-                    consoleLogger.info("Transaction was logged successfully");
+                    transactions.add(jsonBuilder.getResult());
+                    consoleLogger.info("Transaction was generated successfully");
                 }
             } else {
                 throw new IOException();
@@ -66,7 +67,28 @@ public class TransactionLogger {
         return sum;
     }
 
+    public void writeToFile(PrintWriter writer, String transaction, String path) throws IOException {
+        writer.println(transaction);
+        fileLogger.info("Generated transaction: " + path);
+    }
+
+    public void writeAll() throws IOException {
+        consoleLogger.info("Writing all transactions to files... Output directory: " + outDir.getPath());
+        try {
+            int size = transactions.size();
+            for (int i = 0; i < size; i++) {
+                String p = Paths.get(outDir.getPath(), "transaction" + (i + 1) + ".json").toString();
+                try (PrintWriter out = new PrintWriter(p)) {
+                    writeToFile(out, transactions.get(i), p);
+                }
+            }
+        } catch (IOException e) {
+            throw new IOException("Cannot write transaction to file or wrong csv file");
+        }
+    }
+
     private void calculatePaths(Map<String, String> parameters) {
+        consoleLogger.debug("Calculate paths");
         Path jarPath = Paths.get(parameters.get("jarDir"));
         Path outPath = Paths.get(parameters.get("outDir"));
         outDir = new File(jarPath.resolve(outPath).normalize().toString());
@@ -75,8 +97,11 @@ public class TransactionLogger {
     }
 
     public boolean pathsAreCorrect() {
-        if (outDir != null && itemsFile != null && outDir.exists() && itemsFile.exists())
+        if (outDir != null && itemsFile != null && outDir.exists() && itemsFile.exists()){
+            consoleLogger.debug("Correct paths");
             return true;
+        }
+        consoleLogger.error("Incorrect paths");
         return false;
     }
 }
