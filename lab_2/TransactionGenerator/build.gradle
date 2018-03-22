@@ -3,10 +3,11 @@ plugins {
     id "groovy"
     id "com.palantir.jacoco-coverage" version "0.4.0"
     id "maven-publish"
+	id 'com.github.johnrengelman.plugin-shadow' version '2.0.2'
 }
 
-group 'GradleProject'
-version ''
+group 'JavaLab'
+version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -43,14 +44,14 @@ test {
     }
 }
 
-task fatJar(type: Jar) {
+shadowJar {
+    baseName = 'transaction-generator'
+    classifier = null
+    version = null
     manifest {
         attributes 'Implementation-Title': 'Gradle Fat-Jar File',
                 'Main-Class': 'Main'
     }
-    baseName = 'transaction-generator'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
 jacocoTestReport {
