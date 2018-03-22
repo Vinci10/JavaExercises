@@ -2,7 +2,7 @@ Application to get parameters from command line and generate transaction in JSON
 
 Create fat-jar:
 ```
-gradle shadowJar
+gradle fatJar
 ```
 
 Exemplary triggering:
