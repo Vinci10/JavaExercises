@@ -3,10 +3,8 @@ plugins {
     id "maven-publish"
 }
 
-group 'GradleProject'
-version ''
-
-apply plugin: 'java'
+group 'JavaLab'
+version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -34,8 +32,10 @@ dependencies {
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Fat-Jar File',
+                'Implementation-Version': version,
                 'Main-Class': 'Main'
     }
+    version = null
     baseName = 'loggers'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
