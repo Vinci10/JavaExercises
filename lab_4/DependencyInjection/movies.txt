@@ -1,0 +1,8 @@
+title,year,director
+Potop,1974,Hoffman
+Pan Wołodyjowski,1969,Hoffman
+Ogniem i mieczem,1999,Hoffman
+Pulp Fiction,1994,Tarantino
+Django,2012,Tarantino
+PitBull,2005,Vega
+Kobiety Mafii,2018,Vega
