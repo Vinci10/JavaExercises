@@ -39,5 +39,4 @@ public class CustomerMoneyService {
         persistenceLayer.saveCustomer(customer);
         cashbox.put(customer, money.add(amount));
     }
-
 }

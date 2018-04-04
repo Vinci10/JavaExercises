@@ -1,9 +1,9 @@
 package uj.jwzp.w2.e3;
 
 public class Customer {
-    private long id;
-    private String name;
-    private String address;
+    private final long id;
+    private final String name;
+    private final String address;
 
     public Customer(long id, String name, String address) {
         this.id = id;
