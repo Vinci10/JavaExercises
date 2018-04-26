@@ -31,6 +31,7 @@ public class TransactionWriter {
     public void writeTransactions() throws Exception {
         if (!pathsAreCorrect())
             throw new Exception("Cannot save transactions");
+        consoleLogger.info("Generating transactions...");
         int eventsCount = Integer.parseInt(parameters.get("eventsCount"));
         String transaction;
         for (int i = 0; i < eventsCount; i++) {
@@ -41,11 +42,11 @@ public class TransactionWriter {
             fileLogger.info("Generated transaction: " + p);
             writer.close();
         }
-        consoleLogger.info("Transaction was generated successfully");
+        consoleLogger.info("Transactions were generated successfully");
     }
 
     private void calculatePaths() {
-        consoleLogger.debug("Calculate paths");
+        consoleLogger.debug("Calculating paths...");
         Path jarPath = Paths.get(parameters.get("jarDir"));
         Path outPath = Paths.get(parameters.get("outDir"));
         outDir = jarPath.resolve(outPath).normalize().toString();
@@ -54,13 +55,15 @@ public class TransactionWriter {
     }
 
     public boolean pathsAreCorrect() throws IOException {
-        File out = new File(outDir);
-        if (!out.exists()) {
-            if (!out.mkdirs())
-                consoleLogger.error("Cannot create output directory");
-        }
         File itemsFile = new File(itemsPath);
         if (itemsFile.exists()) {
+            File out = new File(outDir);
+            if (!out.exists()) {
+                if (!out.mkdirs()) {
+                    consoleLogger.error("Cannot create output directory");
+                    return false;
+                }
+            }
             consoleLogger.debug("Correct paths");
             return true;
         }

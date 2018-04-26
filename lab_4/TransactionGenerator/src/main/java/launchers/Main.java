@@ -31,7 +31,6 @@ public class Main {
             }
             TransactionGenerator generator = (TransactionGenerator) ctx.getBean("transactionGenerator", builder, reader);
             TransactionWriter writer = (TransactionWriter) ctx.getBean("transactionWriter", parameters, generator);
-            logger.info("Generating transactions...");
             writer.writeTransactions();
         } catch (Exception e) {
             logger.error(e.getMessage());

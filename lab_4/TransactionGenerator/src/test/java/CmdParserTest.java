@@ -21,8 +21,6 @@ public class CmdParserTest {
 
     @Test
     public void correctParameters() throws URISyntaxException {
-        File classfile = new File(CmdParser.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-        String path = classfile.getParentFile().getPath();
         String[] args = new String[] {"-customerIds", "1:25", "-dateRange", "2018-03-08T00:00:00.000-0100:2018-03-12T23:59:59.999-0100",
                 "-itemsFile", "items.csv", "-itemsCount", "5:15", "-itemsQuantity", "1:30", "-eventsCount", "1000", "-outDir", "./output", "-format", "XMl"};
         Map<String, String> params1 = new CmdParser(args).parse();
@@ -35,14 +33,12 @@ public class CmdParserTest {
         params2.put("eventsCount", "1000");
         params2.put("outDir", "./output");
         params2.put("format", "xml");
-        params2.put("jarDir", path);
+        params2.put("jarDir", new File("").getAbsolutePath());
         assertEquals(params1, params2);
     }
 
     @Test
     public void defaultParameters() throws URISyntaxException {
-        File classfile = new File(CmdParser.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-        String path = classfile.getParentFile().getPath();
         String[] args = new String[] {"-itemsFile", "files/items.csv"};
         Map<String, String> params1 = new CmdParser(args).parse();
         HashMap<String, String> params2 = new HashMap<>();
@@ -54,9 +50,9 @@ public class CmdParserTest {
         params2.put("itemsCount", "1:5");
         params2.put("itemsQuantity", "1:5");
         params2.put("eventsCount", "100");
-        params2.put("outDir", path);
+        params2.put("outDir", new File("").getAbsolutePath());
         params2.put("format", "json");
-        params2.put("jarDir", path);
+        params2.put("jarDir", new File("").getAbsolutePath());
         assertEquals(params1, params2);
     }
 }
