@@ -24,12 +24,16 @@
         </encoder>
     </appender>
 
-    <logger name="Console" level="INFO" additivity="false">
+    <logger name="Console" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="File" level="INFO" additivity="false">
+    <logger name="File" level="TRACE" additivity="false">
         <appender-ref ref="FILE_TIME"/>
+    </logger>
+
+    <logger name="org.springframework" level="ERROR" additivity="false">
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <root level="DEBUG">

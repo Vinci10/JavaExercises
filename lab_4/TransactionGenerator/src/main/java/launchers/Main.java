@@ -29,10 +29,10 @@ public class Main {
             } else {
                 builder = (JsonBuilder) ctx.getBean("jsonBuilder");
             }
-            TransactionWriter writer = (TransactionWriter) ctx.getBean("transactionWriter", builder);
+            TransactionGenerator generator = (TransactionGenerator) ctx.getBean("transactionGenerator", builder, reader);
+            TransactionWriter writer = (TransactionWriter) ctx.getBean("transactionWriter", parameters, generator);
             logger.info("Generating transactions...");
-            writer.generate(parameters, reader);
-            writer.writeAll();
+            writer.writeTransactions();
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

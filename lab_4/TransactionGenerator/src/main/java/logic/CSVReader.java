@@ -12,7 +12,8 @@ import java.util.List;
 
 @Service
 public class CSVReader {
-    public List<Product> read(File file) throws IOException{
+    public List<Product> read(String path) throws IOException{
+        File file = new File(path);
         List<Product> products;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             products = getProducts(br);

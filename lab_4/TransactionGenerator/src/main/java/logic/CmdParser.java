@@ -69,6 +69,6 @@ public class CmdParser {
     private String getCurrentDirectory() {
         CodeSource codeSource = CmdParser.class.getProtectionDomain().getCodeSource();
         File jarFile = new File(codeSource.getLocation().getPath());
-        return jarFile.getParentFile().getPath();
+        return jarFile.getParentFile().getPath().replaceAll("%20", " ");
     }
 }
