@@ -1,23 +1,28 @@
 package logic;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
+@Service
+@Scope("singleton")
 public class RandomGenerator {
-    private static final Random random;
+    private final Random random;
 
-    static {
+    public RandomGenerator() {
         random = new Random();
     }
 
-    public static int generateInt(int min, int max) throws IllegalArgumentException {
-        if (min < 0 || max < 0) throw new IllegalArgumentException();
+    public int generateInt(int min, int max) throws IllegalArgumentException {
+        if (min < 0 || max < 0 || max < min) throw new IllegalArgumentException();
         return random.nextInt((max - min) + 1) + min;
     }
 
-    public static String generateTimestamp(String s) throws DateTimeParseException {
+    public String generateTimestamp(String s) throws DateTimeParseException {
         int index = s.indexOf(':', 18);
         String st = s.substring(0, index);
         if (st.length() > 23) {

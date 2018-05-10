@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -36,13 +37,17 @@ public class TransactionWriter {
         String transaction;
         for (int i = 0; i < eventsCount; i++) {
             transaction = generator.generate(parameters, itemsPath);
-            String p = Paths.get(outDir, "transaction" + (i + 1) + generator.getOutputType()).toString();
-            PrintWriter writer = new PrintWriter(p);
-            writer.println(transaction);
-            fileLogger.info("Generated transaction: " + p);
-            writer.close();
+            writeToFile(i, transaction);
         }
         consoleLogger.info("Transactions were generated successfully");
+    }
+
+    public void writeToFile(int i, String transaction) throws FileNotFoundException {
+        String p = Paths.get(outDir, "transaction" + (i + 1) + generator.getOutputType()).toString();
+        PrintWriter writer = new PrintWriter(p);
+        writer.println(transaction);
+        fileLogger.info("Generated transaction: " + p);
+        writer.close();
     }
 
     private void calculatePaths() {

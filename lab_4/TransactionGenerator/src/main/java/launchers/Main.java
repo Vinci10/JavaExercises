@@ -29,11 +29,12 @@ public class Main {
             } else {
                 builder = (JsonBuilder) ctx.getBean("jsonBuilder");
             }
-            TransactionGenerator generator = (TransactionGenerator) ctx.getBean("transactionGenerator", builder, reader);
+            RandomGenerator randomGenerator = (RandomGenerator) ctx.getBean("randomGenerator");
+            TransactionGenerator generator = (TransactionGenerator) ctx.getBean("transactionGenerator", builder, reader, randomGenerator);
             TransactionWriter writer = (TransactionWriter) ctx.getBean("transactionWriter", parameters, generator);
             writer.writeTransactions();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.toString());
         }
     }
 }
