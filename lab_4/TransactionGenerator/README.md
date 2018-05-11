@@ -27,5 +27,5 @@ gradle publishToMavenLocal
 Before build an image from a Dockerfile create fat-jar:
 ```
 gradle fatJar
-docker build --tag generator-transakcji .
+docker build --tag transaction-generator .
 ```
