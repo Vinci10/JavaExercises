@@ -1,7 +1,9 @@
 import logic.CmdParser;
+import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,14 +15,14 @@ import static org.junit.Assert.*;
 
 public class CmdParserTest {
     @Test(expected = IllegalArgumentException.class)
-    public void wrongParameterNoItemsFile() {
+    public void wrongParameterNoItemsFile() throws IOException, ParseException {
         String[] args = new String[]{"-customerIds", "1:20", "-dateRange", "2018-03-08T00:00:00.000-0100:2018-03-08T23:59:59.999-0100",
                 "-itemsCount", "5:15", "-itemsQuantity", "1:30", "-eventsCount", "1000", "-outDir", "./"};
         new CmdParser(args).parse();
     }
 
     @Test
-    public void correctParameters() throws URISyntaxException {
+    public void correctParameters() throws URISyntaxException, IOException, ParseException {
         String[] args = new String[] {"-customerIds", "1:25", "-dateRange", "2018-03-08T00:00:00.000-0100:2018-03-12T23:59:59.999-0100",
                 "-itemsFile", "items.csv", "-itemsCount", "5:15", "-itemsQuantity", "1:30", "-eventsCount", "1000", "-outDir", "./output", "-format", "XMl"};
         Map<String, String> params1 = new CmdParser(args).parse();
@@ -38,7 +40,7 @@ public class CmdParserTest {
     }
 
     @Test
-    public void defaultParameters() throws URISyntaxException {
+    public void defaultParameters() throws URISyntaxException, IOException, ParseException {
         String[] args = new String[] {"-itemsFile", "files/items.csv"};
         Map<String, String> params1 = new CmdParser(args).parse();
         HashMap<String, String> params2 = new HashMap<>();
