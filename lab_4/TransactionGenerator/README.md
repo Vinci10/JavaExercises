@@ -23,3 +23,8 @@ Publishing to Maven local:
 ```
 gradle publishToMavenLocal
 ```
+
+Before build an image from a Dockerfile create fat-jar:
+```
+gradle fatJar
+```
