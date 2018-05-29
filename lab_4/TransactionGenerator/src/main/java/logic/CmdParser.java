@@ -35,6 +35,15 @@ public class CmdParser {
         } else {
             if (!commandLine.hasOption("itemsFile"))
                 throw new IllegalArgumentException("Missing required parameter: itemsFile");
+            if (commandLine.hasOption("broker")) {
+                parameters.put("broker", commandLine.getOptionValue("broker"));
+                if (!commandLine.hasOption("queue") && !commandLine.hasOption("topic"))
+                    throw new IllegalArgumentException("Missing required parameters: queue or topic");
+                if (commandLine.hasOption("queue") && commandLine.getOptionValue("queue").length() > 0)
+                    parameters.put("queue", commandLine.getOptionValue("queue"));
+                if (commandLine.hasOption("topic") && commandLine.getOptionValue("topic").length() > 0)
+                    parameters.put("topic", commandLine.getOptionValue("topic"));
+            }
             parameters.put("customerIds", commandLine.getOptionValue("customerIds", "1:20"));
             parameters.put("dateRange", commandLine.getOptionValue("dateRange", getDefaultTimestamp()));
             parameters.put("itemsFile", commandLine.getOptionValue("itemsFile"));
@@ -59,6 +68,9 @@ public class CmdParser {
         options.addOption(new Option("outDir", true, "output directory"));
         options.addOption(new Option("format", true, "output format"));
         options.addOption(new Option("configFile", true, "file with parameters"));
+        options.addOption(new Option("broker", true, "JMS broker"));
+        options.addOption(new Option("queue", true, "JMS queue"));
+        options.addOption(new Option("topic", true, "JMS topic"));
     }
 
     private String getDefaultTimestamp() {

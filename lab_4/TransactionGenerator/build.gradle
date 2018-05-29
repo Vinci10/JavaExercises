@@ -41,6 +41,7 @@ dependencies {
     compile group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
     compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.0'
     compile 'org.springframework:spring-context:5.0.4.RELEASE'
+    compile group: 'org.apache.activemq', name: 'activemq-client', version: '5.9.0'
 }
 
 test {

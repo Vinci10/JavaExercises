@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.jms.JMSException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,9 +36,60 @@ public class TransactionWriter {
         consoleLogger.info("Generating transactions...");
         int eventsCount = Integer.parseInt(parameters.get("eventsCount"));
         String transaction;
+        JmsProducerQueue jmsProducerQueue = null;
+        JmsProducerTopic jmsProducerTopic = null;
+        if (parameters.containsKey("broker")) {
+            String broker = parameters.get("broker");
+            if (parameters.containsKey("queue")) {
+                try {
+                    jmsProducerQueue = new JmsProducerQueue(broker, parameters.get("queue"));
+                } catch (Exception e) {
+                    consoleLogger.error(e.toString());
+                }
+            }
+            if (parameters.containsKey("topic")) {
+                try {
+                    jmsProducerTopic = new JmsProducerTopic(broker, parameters.get("topic"));
+                } catch (Exception e) {
+                    consoleLogger.error(e.toString());
+                }
+            }
+        }
         for (int i = 0; i < eventsCount; i++) {
             transaction = generator.generate(parameters, itemsPath);
             writeToFile(i, transaction);
+            if (jmsProducerQueue != null) {
+                try {
+                    jmsProducerQueue.sendMessage(transaction);
+
+                } catch (Exception e) {
+                    consoleLogger.error(e.toString());
+                }
+            }
+            if (jmsProducerTopic != null) {
+                try {
+                    jmsProducerTopic.sendMessage(transaction);
+
+                } catch (Exception e) {
+                    consoleLogger.error(e.toString());
+                }
+            }
+        }
+        if (jmsProducerTopic != null) {
+            try {
+                jmsProducerTopic.closeTopic();
+
+            } catch (Exception e) {
+                consoleLogger.error(e.toString());
+            }
+        }
+        if (jmsProducerQueue != null) {
+            try {
+                jmsProducerQueue.closeQueue();
+
+            } catch (Exception e) {
+                consoleLogger.error(e.toString());
+            }
         }
         consoleLogger.info("Transactions were generated successfully");
     }
