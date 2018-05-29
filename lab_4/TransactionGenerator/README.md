@@ -31,8 +31,11 @@ docker build --tag transaction-generator .
 ```
 
 There are 3 additional parameters to send transactions to ActiveMQ message broker:
+
 -broker - broker address
+
 -queue - queue name
+
 -topic - topic name
 
 Exemplary triggering:
